@@ -46,10 +46,10 @@ def clean_data():
             # clean the image
             image_path = os.path.join(training_path, folder, image)
             image = Image.open(image_path)
-            # resize the image
+            # # resize the image
             image = image.resize((48, 48))
             # save the image
-            image.save(image_path)
+            image.save(image_path, quality=95)
 
 
 # Call the function
