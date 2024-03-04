@@ -1,15 +1,14 @@
 import os
-from PIL import Image, ImageEnhance
+import random
+
+from PIL import Image
 import numpy as np
-from sklearn.neural_network import MLPClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay
-from sklearn.metrics import precision_score, recall_score
 
 import matplotlib.pyplot as plt
 
 training_path = "data/train"
 testing_path = "data/test"
+traits = ['focused', 'happy', 'neutral', 'surprise']
 
 
 # A function "setup images" that only keeps 500 images from each folder inside the "data/train" folder
@@ -52,5 +51,70 @@ def clean_data():
             image.save(image_path, quality=95)
 
 
-# Call the function
-clean_data()
+# A function "load_data" that loads the images from the "data/train" and "data/test" folders
+# and returns the images as a list of numpy arrays and the labels as a list of integers.
+def load_data(is_training=True):
+    if is_training:
+        path = training_path
+    else:
+        path = testing_path
+    images = []
+    labels = []
+    for folder in os.listdir(path):
+        if folder == ".DS_Store":
+            continue
+        for image in os.listdir(os.path.join(path, folder)):
+            if image == ".DS_Store":
+                continue
+            image_path = os.path.join(path, folder, image)
+            image = Image.open(image_path)
+            image = np.array(image)
+            images.append(image)
+            labels.append(int(folder))
+    return images, labels
+
+
+def load_images_from_folder(folder, num_images=25):
+    """
+    Load a specific number of images randomly from a folder.
+
+    :param folder: Path to the folder from which to load images.
+    :param num_images: Number of images to load.
+    :return: A list of PIL Image objects.
+    """
+    images = []
+    file_names = os.listdir(folder)
+    selected_files = random.sample(file_names, min(len(file_names), num_images))
+    for filename in selected_files:
+        if filename == ".DS_Store":
+            continue
+        img = Image.open(os.path.join(folder, filename))
+        if img is not None:
+            images.append(img)
+    return images
+
+
+def plot_images(images, title, rows=5, cols=5):
+    """
+    Plot a list of images in a grid.
+
+    :param images: List of PIL Image objects.
+    :param title: Title of the plot.
+    :param rows: Number of rows in the grid.
+    :param cols: Number of columns in the grid.
+    """
+    fig, axs = plt.subplots(rows, cols, figsize=(8, 8))
+    fig.suptitle(title)
+    for i in range(rows * cols):
+        ax = axs[i // cols, i % cols]
+        ax.imshow(images[i], cmap="gray") if i < len(images) else ax.axis('off')
+        ax.axis('off')
+    plt.tight_layout()
+    plt.subplots_adjust(top=0.9)
+    plt.show()
+
+
+for trait in traits:
+    folder_path = os.path.join(training_path, trait)
+    images = load_images_from_folder(folder_path)
+    plot_images(images, f"Images for {trait}")
