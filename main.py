@@ -98,7 +98,8 @@ def load_images_from_folder(folder, num_images=25):
 
 def plot_class_distribution(classes, title):
     """
-    Plot a bar graph showing the number of images in each class. This helps in understanding if any class is overrepresented or underrepresented.
+    Plot a bar graph showing the number of images in each class. This helps in understanding
+    if any class is overrepresented or underrepresented.
 
     :param classes: List of class labels.
     :param title: Title of the plot.
@@ -148,6 +149,8 @@ def plot_histogram(images, title):
     plt.show()
 
 
+# setup_images()            # only run once
+# clean_data()              # only run once
 train_images, train_labels = load_data()
 test_images, test_labels = load_data(False)
 
