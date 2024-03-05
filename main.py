@@ -19,14 +19,16 @@ def setup_images():
         if folder == ".DS_Store":
             continue
         images = os.listdir(os.path.join(training_path, folder))
+        if ".DS_Store" in images:
+            os.remove(os.path.join(training_path, folder, ".DS_Store"))
         for i in range(500, len(images)):
             os.remove(os.path.join(training_path, folder, images[i]))
     for folder in os.listdir(testing_path):
         if folder == ".DS_Store":
             continue
         images = os.listdir(os.path.join(testing_path, folder))
-        # remove the images after 100 (ignore .DS_Store)
-        # check if there is a .DS_Store file in the folder
+        if ".DS_Store" in images:
+            os.remove(os.path.join(testing_path, folder, ".DS_Store"))
         for i in range(100, len(images)):
             os.remove(os.path.join(testing_path, folder, images[i]))
 
@@ -70,7 +72,7 @@ def load_data(is_training=True):
             image = Image.open(image_path)
             image = np.array(image)
             images.append(image)
-            labels.append(int(folder))
+            labels.append(folder)
     return images, labels
 
 
@@ -94,6 +96,22 @@ def load_images_from_folder(folder, num_images=25):
     return images
 
 
+def plot_class_distribution(classes, title):
+    """
+    Plot a bar graph showing the number of images in each class. This helps in understanding if any class is overrepresented or underrepresented.
+
+    :param classes: List of class labels.
+    :param title: Title of the plot.
+    """
+    fig, axs = plt.subplots(1, 1, figsize=(8, 8))
+    fig.suptitle(title)
+    unique, counts = np.unique(classes, return_counts=True)
+    axs.bar(unique, counts, color='k', alpha=0.7)
+    axs.set_xlabel('Class')
+    axs.set_ylabel('Number of Images')
+    plt.show()
+
+
 def plot_images(images, title, rows=5, cols=5):
     """
     Plot a list of images in a grid.
@@ -114,7 +132,33 @@ def plot_images(images, title, rows=5, cols=5):
     plt.show()
 
 
+def plot_histogram(images, title):
+    """
+    plot a histogram showing the distribution of pixel intensities. This can provide insights into variations in
+    lighting conditions among images.
+
+    :param images: List of PIL Image objects.
+    :param title: Title of the plot.
+    """
+    fig, axs = plt.subplots(1, 1, figsize=(8, 8))
+    fig.suptitle(title)
+    axs.hist(np.array(images).ravel(), bins=256, range=(0, 256), density=True, color='k', alpha=0.7)
+    axs.set_xlabel('Pixel Intensity')
+    axs.set_ylabel('Frequency')
+    plt.show()
+
+
+train_images, train_labels = load_data()
+test_images, test_labels = load_data(False)
+
+print(f"Number of training images: {len(train_images)}")
+print(f"Number of testing images: {len(test_images)}")
+
+plot_class_distribution(train_labels, "Class Distribution in Training Data")
+plot_class_distribution(test_labels, "Class Distribution in Testing Data")
+
 for trait in traits:
     folder_path = os.path.join(training_path, trait)
-    images = load_images_from_folder(folder_path)
-    plot_images(images, f"Images for {trait}")
+    imgs = load_images_from_folder(folder_path)
+    plot_images(imgs, f"Images for {trait}")
+    plot_histogram(imgs, f"Histogram of pixel values for {trait}")
