@@ -18,8 +18,10 @@ class MainModel(nn.Module):
             nn.MaxPool2d(kernel_size=2, stride=2),
         )
         self.fc_layers = nn.Sequential(
+            nn.Dropout(0.5),
             nn.Linear(64 * 6 * 6, 128),
             nn.ReLU(),
+            nn.Dropout(0.5),
             nn.Linear(128, num_classes),
         )
 

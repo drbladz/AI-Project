@@ -179,32 +179,41 @@ def run_model_analysis():
         'Micro F': [results_main[7], results_variant1[7], results_variant2[7]]
     }
 
-    pd.set_option('display.max_colwidth', None)
     df_metrics = pd.DataFrame(metrics_data)
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.width', 2000)
+    pd.set_option('display.float_format', '{:20,.2f}'.format)
+    pd.set_option('display.max_colwidth', None)
     print(df_metrics)
+    pd.reset_option('display.max_rows')
+    pd.reset_option('display.max_columns')
+    pd.reset_option('display.width')
+    pd.reset_option('display.float_format')
+    pd.reset_option('display.max_colwidth')
 
 
 if __name__ == '__main__':
-    import time as t
-    start_main = t.time()
-    run_model_creation('main_model')
-    end_main = t.time()
-    print("*" * 50)
-    print(f"Time taken to train main model: {end_main - start_main:.2f} seconds")
-    print("*" * 50)
-
-    start_main = t.time()
-    run_model_creation('variant1')
-    end_main = t.time()
-    print("*" * 50)
-    print(f"Time taken to train variant1 model: {end_main - start_main:.2f} seconds")
-    print("*" * 50)
-
-    start_main = t.time()
-    run_model_creation('variant2')
-    end_main = t.time()
-    print("*" * 50)
-    print(f"Time taken to train variant2 model: {end_main - start_main:.2f} seconds")
-    print("*" * 50)
+    # import time as t
+    # start_main = t.time()
+    # run_model_creation('main_model')
+    # end_main = t.time()
+    # print("*" * 50)
+    # print(f"Time taken to train main model: {end_main - start_main:.2f} seconds")
+    # print("*" * 50)
+    #
+    # start_main = t.time()
+    # run_model_creation('variant1')
+    # end_main = t.time()
+    # print("*" * 50)
+    # print(f"Time taken to train variant1 model: {end_main - start_main:.2f} seconds")
+    # print("*" * 50)
+    #
+    # start_main = t.time()
+    # run_model_creation('variant2')
+    # end_main = t.time()
+    # print("*" * 50)
+    # print(f"Time taken to train variant2 model: {end_main - start_main:.2f} seconds")
+    # print("*" * 50)
 
     run_model_analysis()

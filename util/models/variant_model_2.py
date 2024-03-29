@@ -5,11 +5,11 @@ class VariantModel2(nn.Module):
     def __init__(self, num_classes):
         super(VariantModel2, self).__init__()
         self.conv_layers = nn.Sequential(
-            nn.Conv2d(1, 16, kernel_size=5, padding=2),  # Larger kernel
+            nn.Conv2d(1, 16, kernel_size=7, padding=3),  # Larger kernel
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),
 
-            nn.Conv2d(16, 32, kernel_size=5, padding=2),  # Larger kernel
+            nn.Conv2d(16, 32, kernel_size=7, padding=3),  # Larger kernel
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),
 
@@ -18,8 +18,10 @@ class VariantModel2(nn.Module):
             nn.MaxPool2d(kernel_size=2, stride=2),
         )
         self.fc_layers = nn.Sequential(
+            nn.Dropout(0.5),
             nn.Linear(64 * 6 * 6, 128),
             nn.ReLU(),
+            nn.Dropout(0.5),
             nn.Linear(128, num_classes),
         )
 
