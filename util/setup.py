@@ -6,8 +6,8 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
-training_path = "data/train"
-testing_path = "data/test"
+training_path = "train"
+testing_path = "test"
 traits = ['focused', 'happy', 'neutral', 'surprise']
 
 

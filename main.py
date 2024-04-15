@@ -105,7 +105,7 @@ def get_loaders():
         transforms.Normalize(mean=[0.5], std=[0.5]),
     ])
 
-    dataset = datasets.ImageFolder('../data', transform=transform)
+    dataset = datasets.ImageFolder('data', transform=transform)
 
     train_val_dataset, test_dataset = train_test_split(dataset, test_size=0.15, random_state=42)
     train_dataset, val_dataset = train_test_split(train_val_dataset, test_size=0.176, random_state=42) # 0.176 is approx 15% of 85%
@@ -156,9 +156,9 @@ def run_model_analysis():
     main_model = MainModel(4)
     variant_model1 = VariantModel1(4)
     variant_model2 = VariantModel2(4)
-    main_model.load_state_dict(torch.load('./generated_models/main_model.pth'))
-    variant_model1.load_state_dict(torch.load('./generated_models/variant1.pth'))
-    variant_model2.load_state_dict(torch.load('./generated_models/variant2.pth'))
+    main_model.load_state_dict(torch.load('util/generated_models/main_model.pth'))
+    variant_model1.load_state_dict(torch.load('util/generated_models/variant1.pth'))
+    variant_model2.load_state_dict(torch.load('util/generated_models/variant2.pth'))
 
     # Get the test data loader
     _, _, test_loader = get_loaders()
