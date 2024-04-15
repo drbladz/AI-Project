@@ -81,6 +81,10 @@ def evaluate_model(mdl, tst_loader):
             all_preds.extend(preds.cpu().numpy())
             all_labels.extend(labels.cpu().numpy())
 
+    # Print the label and image for the first 10 samples
+    for i in range(10):
+        print(f'Label: {class_names[all_labels[i]]}, Prediction: {class_names[all_preds[i]]}')
+
     # Confusion matrix
     cm = confusion_matrix(all_labels, all_preds)
     plot_confusion_matrix(cm, class_names)
