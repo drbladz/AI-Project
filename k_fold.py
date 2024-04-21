@@ -14,6 +14,8 @@ from util.models.main_model import MainModel
 from matplotlib import pyplot as plt
 import seaborn as sns
 
+from util.models.part3_model import ImprovedMainModel
+
 class_names = ['focused', 'happy', 'neutral', 'surprise']
 
 
@@ -89,7 +91,10 @@ def k_fold_cross_validation(model_type, k=10):
         train_loader = DataLoader(train_subsampler, batch_size=64, shuffle=True)
         test_loader = DataLoader(test_subsampler, batch_size=64, shuffle=False)
 
-        model = MainModel(4)
+        if model_type == 'part_3':
+            model = ImprovedMainModel(4)
+        else:
+            model = MainModel(4)
         optimizer = optim.Adam(model.parameters(), lr=0.001)
         criterion = nn.CrossEntropyLoss()
 
@@ -129,12 +134,15 @@ def calculate_averages(results):
     return accuracy, precision, recall, f1, micro_precision, micro_recall, micro_f1
 
 
-def run_model_analysis_for_folds(fold_number):
+def run_model_analysis_for_folds(fold_number, model_type='main_model'):
     _, test_loader = get_loaders(fold_number)
 
-    model = MainModel(4)
+    if model_type == 'part_3':
+        model = ImprovedMainModel(4)
+    else:
+        model = MainModel(4)
     model.eval()
-    model.load_state_dict(torch.load(f'generated_models/main_model_fold_{fold_number + 1}.pth'))
+    model.load_state_dict(torch.load(f'generated_models/{model_type}_fold_{fold_number + 1}.pth'))
 
     # Evaluate the model
     cm, accuracy, precision, recall, f1, micro_precision, micro_recall, micro_f1 = evaluate_model(model, test_loader)
@@ -148,11 +156,14 @@ def run_model_analysis_for_folds(fold_number):
     print(f'Micro Recall: {micro_recall}')
     print(f'Micro F1: {micro_f1}')
     print(cm)
+    # print "fold #, accuracy, precision, recall, f1, micro_precision, micro_recall, micro_f1"
+    print(f'{fold_number + 1}, {accuracy}, {precision}, {recall}, {f1}, {micro_precision}, {micro_recall}, {micro_f1}')
 
     plot_confusion_matrix(cm, class_names)
 
 
 if __name__ == '__main__':
-    # k_fold_cross_validation('main_model')
-    run_model_analysis_for_folds(0)
+    # k_fold_cross_validation('part_3')
+    for i in range(10):
+        run_model_analysis_for_folds(i, 'part_3')
     pass
